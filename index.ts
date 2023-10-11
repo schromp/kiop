@@ -1,9 +1,5 @@
-console.log("Hello via Bun!");
-
-// doesnt this need a free variable function?
-// type Term = Abstraction | Application | Variable;
 interface Term {
-  freeVariables(): string[] // TODO: abstraction implementation throws up questions how reduce works no abstractions
+  freeVariables(): string[] // TODO: abstraction implementation throws up questions how reduce works on abstractions
 }
 
 class Variable implements Term {
@@ -40,7 +36,18 @@ class Application implements Term {
   reduce() {
     // TODO: implementation
 
-    let result = this.left
+    var result: Term;
+
+    if (this.left instanceof Application) this.left.reduce()
+    if (this.right instanceof Application) this.right.reduce()
+
+    if (this.left instanceof Abstraction && this.right instanceof Variable) {
+      result = this.left.body // FIX: replace the variables in body - beta reduction
+    }
+
+
+    // if left abstraction and right variable
+    // reduce to body and replace header var
 
     return result;
   }
